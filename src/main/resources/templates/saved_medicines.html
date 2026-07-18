@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Saved Medicines')}"></head>
+<body class="d-flex flex-column">
+
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <h2 class="fw-bold mb-4">Saved Medicines</h2>
+            <div id="savedList" class="row g-4">
+                <!-- Medicines loaded here via JS -->
+            </div>
+            <div id="emptyState" class="text-center mt-5 d-none">
+                <i class="bi bi-heart text-muted fs-1 mb-3 d-block"></i>
+                <h4 class="fw-bold text-muted">No saved medicines</h4>
+                <p class="text-muted-custom">Medicines you save will appear here.</p>
+                <a href="/search" class="btn btn-outline-primary mt-2">Search Medicines</a>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/user/saved', { credentials: 'same-origin' })
+                .then(res => res.json())
+                .then(data => {
+                    const savedList = document.getElementById('savedList');
+                    if (data.length === 0) {
+                        document.getElementById('emptyState').classList.remove('d-none');
+                        return;
+                    }
+                    data.forEach(med => {
+                        const div = document.createElement('div');
+                        div.className = 'col-md-4';
+                        div.innerHTML = `
+                            <div class="glass-card p-4 h-100 cursor-pointer hover-scale" onclick="window.location.href='/medicine/${med.id}'">
+                                <span class="badge bg-primary text-white mb-2">${med.category || 'General'}</span>
+                                <h5 class="fw-bold mb-1">${med.medicineName}</h5>
+                                <small class="text-muted d-block mb-3">${med.genericName || ''}</small>
+                                <p class="text-truncate text-muted-custom small mb-0">${med.uses || ''}</p>
+                            </div>
+                        `;
+                        savedList.appendChild(div);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

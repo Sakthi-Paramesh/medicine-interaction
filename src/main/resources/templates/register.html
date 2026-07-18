@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Register')}"></head>
+<body class="d-flex flex-column">
+
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <main class="page-content d-flex align-items-center justify-content-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="glass-card p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold">Create Account</h2>
+                            <p class="text-muted-custom">Join HumanEase AI today</p>
+                        </div>
+                        
+                        <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+                        <div id="success-alert" class="alert alert-success d-none" role="alert">
+                            Registration successful! Redirecting to login...
+                        </div>
+
+                        <form id="registerForm">
+                            <div class="mb-3">
+                                <label for="username" class="form-label text-muted-custom fw-medium">Username</label>
+                                <input type="text" class="form-control-custom w-100" id="username" name="username" required minlength="3">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label text-muted-custom fw-medium">Email Address</label>
+                                <input type="email" class="form-control-custom w-100" id="email" name="email" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label text-muted-custom fw-medium">Password</label>
+                                <input type="password" class="form-control-custom w-100" id="password" name="password" required minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom w-100 mb-3" id="registerBtn">
+                                Create Account
+                            </button>
+                        </form>
+                        
+                        <p class="text-center mt-3 text-muted-custom mb-0">
+                            Already have an account? <a th:href="@{/login}" class="text-decoration-none text-primary fw-medium">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating...';
+            btn.disabled = true;
+            
+            document.getElementById('error-alert').classList.add('d-none');
+
+            const data = {
+                username: this.username.value,
+                email: this.email.value,
+                password: this.password.value
+            };
+
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('success-alert').classList.remove('d-none');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+            })
+            .catch(error => {
+                const alert = document.getElementById('error-alert');
+                alert.textContent = error.message;
+                alert.classList.remove('d-none');
+                btn.innerHTML = 'Create Account';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

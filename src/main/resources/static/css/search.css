@@ -1,0 +1,187 @@
+/* search.css - Styles for the Search Page Health Awareness Advertisement */
+
+.health-banner {
+    position: relative;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.health-banner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 197, 94, 0.2);
+}
+
+.health-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.health-banner:hover::before {
+    opacity: 1;
+}
+
+.health-banner-content {
+    position: relative;
+    z-index: 1;
+}
+
+.health-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #22c55e, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.health-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.btn-health {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+}
+
+.btn-health:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    color: white;
+}
+
+.health-img-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.health-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s ease;
+}
+
+.health-banner:hover .health-img {
+    transform: scale(1.03);
+}
+
+.warning-card {
+    background: rgba(249, 115, 22, 0.05);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.warning-card:hover {
+    background: rgba(249, 115, 22, 0.08);
+    border-color: rgba(249, 115, 22, 0.4);
+}
+
+.warning-icon {
+    font-size: 2.5rem;
+    color: #f97316;
+}
+
+.warning-text {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+.junk-food-icons {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+.junk-icon-wrapper {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.junk-icon-wrapper:hover {
+    transform: scale(1.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.prohibition {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(239, 68, 68, 0.8);
+    font-size: 3rem;
+    pointer-events: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .health-title {
+        font-size: 2rem;
+    }
+    .warning-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .junk-food-icons {
+        margin-left: 0;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+}

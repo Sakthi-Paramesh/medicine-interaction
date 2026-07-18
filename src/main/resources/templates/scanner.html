@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Prescription Scanner')}"></head>
+<body class="d-flex flex-column">
+
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <main class="page-content py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold"><i class="bi bi-file-earmark-medical text-primary me-2"></i>Prescription Scanner</h2>
+                <p class="text-muted-custom">Upload an image of your prescription, and we will automatically extract the medicines.</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="glass-card p-5 text-center" id="dropArea" style="border: 2px dashed var(--accent-primary);">
+                        <i class="bi bi-cloud-arrow-up display-1 text-primary mb-3"></i>
+                        <h5 class="fw-bold">Drag & Drop your image here</h5>
+                        <p class="text-muted-custom mb-4">or click to browse from your computer</p>
+                        
+                        <input type="file" id="fileInput" class="d-none" accept="image/png, image/jpeg, application/pdf">
+                        <button class="btn btn-primary-custom" onclick="document.getElementById('fileInput').click()">
+                            Browse Files
+                        </button>
+                    </div>
+
+                    <div id="loadingArea" class="glass-card p-5 text-center d-none mt-4">
+                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h5 class="fw-bold mt-3">Analyzing Prescription...</h5>
+                        <p class="text-muted-custom">Using AI and OCR to extract medicine names.</p>
+                    </div>
+
+                    <div id="resultArea" class="glass-card p-4 mt-4 d-none">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2 text-success"><i class="bi bi-check-circle me-2"></i>Extraction Complete</h5>
+                        <h6 class="fw-bold">Extracted Text:</h6>
+                        <div id="extractedText" class="p-3 bg-secondary bg-opacity-10 rounded text-muted-custom mb-3" style="white-space: pre-wrap; font-family: monospace;"></div>
+                        
+                        <button class="btn btn-outline-custom w-100" onclick="analyzeExtractedText()">Analyze with AI</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const dropArea = document.getElementById('dropArea');
+
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                uploadFile(this.files[0]);
+            }
+        });
+
+        // Drag and drop handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropArea.style.backgroundColor = 'var(--bg-secondary)';
+        }
+
+        function unhighlight(e) {
+            dropArea.style.backgroundColor = 'transparent';
+        }
+
+        dropArea.addEventListener('drop', function(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            if (files.length > 0) {
+                uploadFile(files[0]);
+            }
+        }, false);
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            dropArea.classList.add('d-none');
+            document.getElementById('loadingArea').classList.remove('d-none');
+            document.getElementById('resultArea').classList.add('d-none');
+
+            fetch('/api/ocr/scan', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingArea').classList.add('d-none');
+                document.getElementById('resultArea').classList.remove('d-none');
+                document.getElementById('extractedText').textContent = data.text;
+                dropArea.classList.remove('d-none'); // allow another upload
+            })
+            .catch(error => {
+                document.getElementById('loadingArea').classList.add('d-none');
+                dropArea.classList.remove('d-none');
+                alert('Failed to process image. Make sure Tesseract OCR is installed.');
+            });
+        }
+
+        function analyzeExtractedText() {
+            const text = document.getElementById('extractedText').textContent;
+            window.location.href = `/interaction?meds=${encodeURIComponent(text)}`;
+        }
+    </script>
+</body>
+</html>

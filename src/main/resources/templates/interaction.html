@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: header('Interaction Checker')}"></head>
+<body class="d-flex flex-column">
+
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <main class="page-content py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold"><i class="bi bi-arrow-left-right text-primary me-2"></i>Drug Interaction Checker</h2>
+                <p class="text-muted-custom">Enter two or more medicines to see if they are safe to take together.</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="glass-card p-4 mb-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Medicines to check (comma separated)</label>
+                            <input type="text" id="medicinesInput" class="form-control form-control-lg form-control-custom" placeholder="e.g. Paracetamol, Ibuprofen, Aspirin">
+                        </div>
+                        <button class="btn btn-primary-custom btn-lg w-100" id="checkBtn" onclick="checkInteractions()">
+                            <i class="bi bi-shield-check me-2"></i>Check Interactions
+                        </button>
+                    </div>
+
+                    <div id="resultCard" class="glass-card p-4 d-none">
+                        <h4 class="fw-bold mb-3 border-bottom pb-2">Analysis Result</h4>
+                        <div id="loadingSpinner" class="text-center py-4 d-none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted-custom">AI is analyzing potential interactions...</p>
+                        </div>
+                        <div id="analysisText" style="white-space: pre-wrap;" class="fw-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <script>
+        function checkInteractions() {
+            const input = document.getElementById('medicinesInput').value.trim();
+            if (!input) {
+                alert("Please enter medicines to check.");
+                return;
+            }
+
+            const btn = document.getElementById('checkBtn');
+            const resultCard = document.getElementById('resultCard');
+            const spinner = document.getElementById('loadingSpinner');
+            const text = document.getElementById('analysisText');
+
+            btn.disabled = true;
+            resultCard.classList.remove('d-none');
+            spinner.classList.remove('d-none');
+            text.innerHTML = '';
+
+            fetch(`/api/ai/interaction?meds=${encodeURIComponent(input)}`)
+                .then(response => response.json())
+                .then(data => {
+                    spinner.classList.add('d-none');
+                    text.textContent = data.analysis;
+                    btn.disabled = false;
+                })
+                .catch(error => {
+                    spinner.classList.add('d-none');
+                    text.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Error analyzing interactions. Please try again.</span>';
+                    btn.disabled = false;
+                });
+        }
+    </script>
+</body>
+</html>
