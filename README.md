@@ -1,40 +1,34 @@
-# HumanEase AI – Intelligent Medicine Interaction & Prescription Safety System
+# Intelligent Medicine Interaction & Prescription Safety System
 
-**HumanEase AI** is a premium, enterprise-grade SaaS web application built with **Spring Boot 3.4** and **Java 21**. It empowers users to search for medicines, understand complex side effects, check dangerous drug interactions using Google Gemini AI, and scan physical prescriptions via Tesseract OCR.
+**Intelligent Medicine Safety** is a modern web application built with **Python (Django)**. It empowers users to search for medicines, understand complex side effects, check dangerous drug interactions using Google Gemini AI, and scan physical prescriptions via Tesseract OCR.
 
 ---
 
 ## 🚀 Key Features
 
-*   **Intelligent Medicine Search**: Instantly look up thousands of medicines with live autocomplete functionality.
-*   **AI Medicine Assistant**: Powered by Google Gemini 2.5 Flash. If a medicine isn't in the local database, the AI will dynamically generate a highly detailed and medically formatted summary.
+*   **Intelligent Medicine Search**: Instantly look up detailed information on various medicines.
+*   **AI Medicine Assistant**: Powered by Google Gemini. If a medicine isn't fully detailed in the local database, the AI will dynamically generate a highly detailed and medically formatted summary.
 *   **Drug Interaction Checker**: Enter multiple medicines and receive a detailed safety report (Safe, Moderate, Dangerous) regarding how the drugs interact with each other.
-*   **Prescription Scanner (OCR)**: Drag & Drop a prescription image to automatically extract text using Tess4J, and feed it into the AI Interaction Checker.
-*   **Premium SaaS UI**: A beautiful, modern interface featuring glassmorphism, dynamic animations, dark/light modes, and loading skeletons.
-*   **Secure Authentication**: Role-based access control (Admin & User) using Spring Security and stateless JWT tokens via HTTP-Only Cookies.
+*   **Prescription Scanner (OCR)**: Upload a prescription image to automatically extract text using Tesseract OCR, and feed it into the AI Interaction Checker.
+*   **Clean Portfolio UI**: A clean, professional, medical-themed interface built with Bootstrap 5 and custom CSS.
 
 ---
 
 ## 🛠 Technology Stack
 
 ### Backend
-*   **Java 21**
-*   **Spring Boot 3.4.1**
-*   **Spring Security & JWT** (Authentication)
-*   **Spring Data JPA & Hibernate** (ORM)
-*   **Maven** (Dependency Management)
+*   **Python 3**
+*   **Django 5+** (Web Framework)
+*   **SQLite3** (Database)
 
 ### AI & Integrations
-*   **Google Gemini API** (`RestTemplate` client)
-*   **Tess4J** (Tesseract OCR Wrapper for Java)
+*   **Google Gemini AI API** (`google-genai` / `google-generativeai`)
+*   **Tesseract OCR** (`pytesseract` for Python)
 
 ### Frontend
-*   **Thymeleaf** (Server-Side Rendering)
+*   **Django Templates** (Server-Side Rendering)
 *   **Bootstrap 5** (Responsive Grid & Components)
-*   **Vanilla JS & CSS3** (Animations, Dark Mode, API Fetching)
-
-### Database
-*   **MySQL 8** (Relational Database)
+*   **Vanilla JS & CSS3** (Interactive elements)
 
 ---
 
@@ -42,66 +36,65 @@
 
 Before you begin, ensure you have the following installed on your machine:
 
-1.  **Java Development Kit (JDK) 21**
-2.  **Apache Maven** (Optional if using embedded wrapper, but recommended)
-3.  **MySQL Server** (Running on `localhost:3306`)
-4.  **Tesseract OCR** (Must be installed on your system. For Windows, download and install it, ensuring `tessdata` is present in `C:/Program Files/Tesseract-OCR/tessdata`).
+1.  **Python 3.10+**
+2.  **Tesseract OCR**:
+    *   **Windows**: Download and install from [UB-Mannheim/tesseract](https://github.com/UB-Mannheim/tesseract/wiki). Ensure the installation path is added to your environment variables or correctly referenced in `ocr_service.py`.
+    *   **Linux/Mac**: Install via your package manager (e.g., `sudo apt install tesseract-ocr`).
 
 ---
 
 ## 💻 Setup & Installation
 
-### 1. Database Configuration
-Create a new MySQL database named `humanease`:
-```sql
-CREATE DATABASE humanease;
-```
-The application will automatically create the required tables (`spring.jpa.hibernate.ddl-auto=update`).
-
-### 2. Configure Properties
-Open `src/main/resources/application.yml` and verify your database credentials. 
-Add your **Google Gemini API Key**:
-```yaml
-gemini:
-  api:
-    key: "YOUR_GEMINI_API_KEY_HERE"
-    url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-```
-
-### 3. Build & Run
-Open your terminal in the project root directory and run:
+### 1. Clone & Environment Setup
+Clone the repository and set up a virtual environment:
 ```bash
-mvn clean install
-mvn spring-boot:run
+git clone https://github.com/Sakthi-Paramesh/medicine-interaction.git
+cd medicine-interaction
+python -m venv venv
+
+# Activate Virtual Environment
+# On Windows:
+venv\Scripts\activate
+# On Mac/Linux:
+source venv/bin/activate
 ```
 
-The application will start on **http://localhost:8080``**.
-
----
-
-## 📂 Project Structure (Clean Architecture)
-
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
 ```
-src/main/java/com/humanease/
-├── config/         # App configurations
-├── controller/     # REST APIs and Web View Controllers
-├── dto/            # Data Transfer Objects
-├── entity/         # JPA Entities (User, Medicine)
-├── exception/      # Global Exception Handling
-├── repository/     # Spring Data Repositories
-├── security/       # JWT Filters, UserDetails, SecurityConfig
-├── service/        # Business Logic (OCR, AI, Auth, Medicine)
-└── util/           # Helper classes
+
+### 3. Configure API Keys
+Create a `.env` file in the root directory and add your Google Gemini API key:
+```env
+GEMINI_API_KEY=your_api_key_here
 ```
+
+### 4. Database Setup & Seeding
+Run migrations and populate the database with initial medicine data:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+
+# Seed the database with 40+ default medicines
+python seed_40_medicines.py
+```
+
+### 5. Run the Server
+Start the Django development server:
+```bash
+python manage.py runserver
+```
+The application will start on **http://127.0.0.1:8000/**.
 
 ---
 
 ## 🛡 Security Notes
 
-*   **JWT Storage**: JWT tokens are securely stored in HTTP-Only Cookies to prevent XSS attacks while allowing seamless navigation across Thymeleaf pages.
-*   **Passwords**: User passwords are encrypted using `BCryptPasswordEncoder`.
+*   **API Keys**: The `.env` file containing secrets is added to `.gitignore` and must never be pushed to public repositories.
+*   **Medical Disclaimer**: This project is built for demonstration and portfolio purposes. AI-generated content should not substitute professional medical advice.
 
 ---
 
 ## 📜 License
-This project is proprietary and built for demonstration purposes. Medical disclaimers apply: AI-generated content should not substitute professional medical advice.
+This project is built for educational and portfolio purposes.
