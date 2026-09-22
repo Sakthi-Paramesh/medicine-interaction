@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+{% include 'fragments/header.html' with title='Dashboard' %}
+<body class="d-flex flex-column">
+
+    {% include 'fragments/navbar.html' %}
+
+    <main class="page-content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">Welcome, <span class="text-primary" >{{ username }}<>User</span>!</h2>
+                <a href="{% url 'search' %}" class="btn btn-primary-custom">New Search</a>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="display-4 text-danger mb-3"><i class="bi bi-heart-pulse"></i></div>
+                        <h5 class="fw-bold">Saved Medicines</h5>
+                        <p class="text-muted-custom">Access your favorite or daily medications.</p>
+                        <a href="/saved" class="btn btn-outline-custom w-100 mt-2">View Saved</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="display-4 text-success mb-3"><i class="bi bi-file-earmark-medical"></i></div>
+                        <h5 class="fw-bold">Prescription Scanner</h5>
+                        <p class="text-muted-custom">Upload a prescription to automatically analyze.</p>
+                        <a href="#" class="btn btn-outline-custom w-100 mt-2">Upload Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'fragments/footer.html' %}
+
+</body>
+</html>

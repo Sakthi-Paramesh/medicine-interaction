@@ -1,0 +1,61 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <i class="bi bi-shield-plus text-primary me-2"></i>HumanEase AI
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'search' %}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'scanner' %}"><i class="bi bi-camera me-1"></i>Scanner</a>
+                </li>
+                {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-primary-custom" href="{% url 'register' %}">Sign Up</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <form action="{% url 'logout_api' %}" method="post" class="d-inline" id="logoutForm">
+                        {% csrf_token %}
+                        <button type="button" onclick="logout()" class="btn btn-outline-custom">Logout</button>
+                    </form>
+                </li>
+                {% endif %}
+                <li class="nav-item ms-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="theme-toggle">
+                        <label class="form-check-label" for="theme-toggle"><i class="bi bi-moon-stars"></i></label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    function logout() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch('{% url "logout_api" %}', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(response => {
+            window.location.href = '{% url "login" %}?logout';
+        });
+    }
+</script>

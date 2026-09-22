@@ -3,3 +3,15 @@ target/
 .DS_Store
 *.jar
 *.war
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Django
+db.sqlite3
+*.log

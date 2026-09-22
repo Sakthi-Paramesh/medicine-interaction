@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+{% include 'fragments/header.html' with title='Prescription Scanner' %}
+<body class="d-flex flex-column">
+
+    {% include 'fragments/navbar.html' %}
+
+    <main class="page-content py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-3 px-3 py-2 rounded-pill border border-primary border-opacity-25">
+                    <i class="bi bi-stars"></i> Gemini Vision AI
+                </span>
+                <h2 class="fw-bold">AI Prescription Scanner</h2>
+                <p class="text-muted-custom max-w-600 mx-auto">
+                    Upload a photo of your medical prescription. Our AI will extract the medicine names, explain their uses, and flag any dangerous interactions.
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="glass-card p-5 text-center" id="uploadArea">
+                        <input type="file" id="fileInput" class="d-none" accept="image/png, image/jpeg, image/jpg">
+                        <div class="display-1 text-primary mb-3"><i class="bi bi-cloud-arrow-up"></i></div>
+                        <h4 class="fw-bold mb-2">Upload Prescription Image</h4>
+                        <p class="text-muted-custom mb-4">Drag and drop an image here, or click to browse (JPEG, PNG)</p>
+                        <button class="btn btn-primary-custom btn-lg" onclick="document.getElementById('fileInput').click()">Select Image</button>
+                    </div>
+                    
+                    <div id="loadingArea" class="text-center d-none py-5">
+                        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h5 class="fw-bold mt-4">AI is scanning your prescription...</h5>
+                        <p class="text-muted-custom">This usually takes about 5-10 seconds.</p>
+                    </div>
+
+                    <div id="resultsArea" class="d-none mt-5">
+                        <div class="glass-card p-4 p-md-5">
+                            <h3 class="fw-bold mb-4 border-bottom pb-3"><i class="bi bi-clipboard2-pulse text-primary me-2"></i>Analysis Results</h3>
+                            <div id="aiResponse" class="fs-5"></div>
+                            
+                            <div class="text-center mt-5 pt-3 border-top">
+                                <button class="btn btn-outline-custom" onclick="resetScanner()"><i class="bi bi-arrow-clockwise me-2"></i>Scan Another Prescription</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {% include 'fragments/footer.html' %}
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const loadingArea = document.getElementById('loadingArea');
+        const resultsArea = document.getElementById('resultsArea');
+        const aiResponse = document.getElementById('aiResponse');
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('border', 'border-primary');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('border', 'border-primary');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('border', 'border-primary');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleUpload();
+            }
+        });
+
+        fileInput.addEventListener('change', handleUpload);
+
+        function handleUpload() {
+            if (!fileInput.files || fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload a valid image file (JPEG or PNG).');
+                return;
+            }
+
+            uploadArea.classList.add('d-none');
+            loadingArea.classList.remove('d-none');
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('/api/medicines/scan', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to analyze image');
+                return res.text();
+            })
+            .then(html => {
+                loadingArea.classList.add('d-none');
+                resultsArea.classList.remove('d-none');
+                aiResponse.innerHTML = html;
+            })
+            .catch(err => {
+                alert('Error: ' + err.message);
+                resetScanner();
+            });
+        }
+
+        function resetScanner() {
+            fileInput.value = '';
+            resultsArea.classList.add('d-none');
+            loadingArea.classList.add('d-none');
+            uploadArea.classList.remove('d-none');
+            aiResponse.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
