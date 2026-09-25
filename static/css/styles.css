@@ -1,15 +1,17 @@
 :root {
     /* Light Mode Tokens */
-    --bg-primary: #f8fafc;
-    --bg-secondary: #ffffff;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
     --text-primary: #0f172a;
     --text-secondary: #64748b;
     --accent-primary: #3b82f6;
     --accent-hover: #2563eb;
     --border-color: #e2e8f0;
-    --card-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --grid-line: rgba(59, 130, 246, 0.08);
+    --grid-line-bold: rgba(59, 130, 246, 0.15);
+    --card-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.75);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
@@ -39,20 +41,91 @@ body {
     flex-direction: column;
 }
 
-/* Glassmorphism Classes */
+/* =========================================
+   LIQUID GLASS CARD — Apple-style
+   ========================================= */
 .glass-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: var(--glass-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Layered translucent background */
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.72) 0%,
+            rgba(255,255,255,0.38) 50%,
+            rgba(200,220,255,0.30) 100%
+        );
+    backdrop-filter: blur(24px) saturate(180%) brightness(1.08);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.08);
+
+    /* Prismatic border */
+    border: 1px solid rgba(255,255,255,0.80);
+    border-top-color: rgba(255,255,255,0.95);
+    border-left-color: rgba(255,255,255,0.95);
+    border-radius: 20px;
+
+    /* Layered shadow: soft ambient + blue tint + inner glow */
+    box-shadow:
+        0 2px 4px rgba(0,0,0,0.04),
+        0 8px 32px rgba(59,130,246,0.08),
+        0 20px 60px rgba(59,130,246,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.90),
+        inset 0 -1px 0 rgba(59,130,246,0.06);
+
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                box-shadow 0.35s ease;
+}
+
+/* Shimmer sweep on hover */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    left: -60%;
+    width: 60%;
+    height: 220%;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,0.55) 50%,
+        transparent 70%
+    );
+    transform: skewX(-15deg) translateX(-100%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glass-card:hover::before {
+    transform: skewX(-15deg) translateX(380%);
+}
+
+/* Top highlight bar */
+.glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 12px; right: 12px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.95) 30%,
+        rgba(200,220,255,0.80) 70%,
+        transparent
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .glass-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.06),
+        0 16px 48px rgba(59,130,246,0.14),
+        0 32px 80px rgba(59,130,246,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        inset 0 -1px 0 rgba(59,130,246,0.08);
 }
 
 /* Navbar */
@@ -160,25 +233,40 @@ body {
 }
 
 /* =========================================
-   Simple Medical Background 
+   WHITE GRID BACKGROUND — Portfolio Style
    ========================================= */
 .hero-wrapper {
     position: relative;
     overflow: hidden;
-    background-color: var(--bg-primary); 
+    background-color: #ffffff;
+    /* Double grid: bold major lines + fine minor lines */
+    background-image:
+        linear-gradient(var(--grid-line-bold) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line-bold) 1px, transparent 1px),
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:
+        80px 80px,
+        80px 80px,
+        20px 20px,
+        20px 20px;
+    background-position:
+        -1px -1px,
+        -1px -1px,
+        -1px -1px,
+        -1px -1px;
 }
 
-/* Subtle static medical plus pattern */
+/* Soft radial vignette so edges fade cleanly */
 .hero-wrapper::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 18V10h4v8h8v4h-8v8h-4v-8h-8v-4h8z' fill='%233b82f6' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: 0;
+    inset: 0;
+    background: radial-gradient(ellipse 90% 70% at 50% 0%,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.55) 100%);
     pointer-events: none;
+    z-index: 0;
 }
 
 /* =========================================

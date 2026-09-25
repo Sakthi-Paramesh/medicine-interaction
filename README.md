@@ -43,7 +43,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 ---
 
-## 💻 Setup & Installation
+## 💻 Setup & Installationss
 
 ### 1. Clone & Environment Setup
 Clone the repository and set up a virtual environment:
