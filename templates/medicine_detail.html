@@ -67,12 +67,12 @@
                 <div class="row g-4">
                     <div class="col-lg-8">
                         <div class="glass-card p-4 mb-4">
-                            <h4 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="fa-solid fa-stethoscope me-2"></i>Uses</h4>
-                            <p class="mb-0 text-white" style="font-size: 1.05rem;">${med.uses || 'No data available.'}</p>
+                            <h4 class="fw-bold mb-3 border-bottom pb-2" style="color:#111111;"><i class="fa-solid fa-stethoscope me-2 text-primary"></i>Uses</h4>
+                            <p class="mb-0" style="font-size: 1.05rem; color:#222222;">${med.uses || 'No data available.'}</p>
                         </div>
 
                         <div class="glass-card p-4 mb-4">
-                            <h4 class="fw-bold mb-3 border-bottom pb-2 text-info"><i class="fa-solid fa-head-side-cough me-2"></i>Targeted Symptoms</h4>
+                            <h4 class="fw-bold mb-3 border-bottom pb-2" style="color:#111111;"><i class="fa-solid fa-head-side-cough me-2 text-info"></i>Targeted Symptoms</h4>
                             <div class="d-flex flex-wrap gap-2 mt-2">
                                 ${(med.symptoms || 'General conditions').split(',').map(s => 
                                     `<span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill shadow-sm"><i class="fa-solid fa-virus me-1"></i> ${s.trim()}</span>`
@@ -81,15 +81,15 @@
                         </div>
                         
                         <div class="glass-card p-4 mb-4">
-                            <h4 class="fw-bold mb-3 border-bottom pb-2 text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Side Effects</h4>
+                            <h4 class="fw-bold mb-3 border-bottom pb-2" style="color:#111111;"><i class="bi bi-exclamation-triangle me-2 text-warning"></i>Side Effects</h4>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h6 class="fw-bold">Common</h6>
-                                    <p class="text-muted-custom">${med.commonSideEffects || 'None reported.'}</p>
+                                    <h6 class="fw-bold" style="color:#111111;">Common</h6>
+                                    <p style="color:#444444;">${med.commonSideEffects || 'None reported.'}</p>
                                 </div>
                                 <div class="col-md-6">
                                     <h6 class="fw-bold text-danger">Serious (Seek immediate help)</h6>
-                                    <p class="text-muted-custom">${med.seriousSideEffects || 'None reported.'}</p>
+                                    <p style="color:#444444;">${med.seriousSideEffects || 'None reported.'}</p>
                                 </div>
                             </div>
                         </div>
@@ -106,10 +106,10 @@
                         <div class="glass-card p-4 mb-4 bg-danger bg-opacity-10 border-danger border-opacity-25">
                             <h5 class="fw-bold text-danger mb-3"><i class="bi bi-shield-x me-2"></i>Safety Warnings</h5>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-3"><strong><i class="bi bi-cup-straw me-2"></i>Alcohol:</strong><br><span class="text-muted-custom small">${med.alcoholWarning || 'Consult doctor.'}</span></li>
-                                <li class="mb-3"><strong><i class="bi bi-person-hearts me-2"></i>Pregnancy:</strong><br><span class="text-muted-custom small">${med.pregnancySafety || 'Consult doctor.'}</span></li>
-                                <li class="mb-3"><strong><i class="bi bi-car-front me-2"></i>Driving:</strong><br><span class="text-muted-custom small">${med.drivingWarning || 'Consult doctor.'}</span></li>
-                                <li class="mb-0"><strong><i class="bi bi-heart me-2"></i>Kidney/Liver:</strong><br><span class="text-muted-custom small">${med.kidneyWarning || ''} ${med.liverWarning || ''}</span></li>
+                                <li class="mb-3"><strong><i class="bi bi-cup-straw me-2"></i>Alcohol:</strong><br><span style="color:#444444;" class="small">${med.alcoholWarning || 'Consult doctor.'}</span></li>
+                                <li class="mb-3"><strong><i class="bi bi-person-hearts me-2"></i>Pregnancy:</strong><br><span style="color:#444444;" class="small">${med.pregnancySafety || 'Consult doctor.'}</span></li>
+                                <li class="mb-3"><strong><i class="bi bi-car-front me-2"></i>Driving:</strong><br><span style="color:#444444;" class="small">${med.drivingWarning || 'Consult doctor.'}</span></li>
+                                <li class="mb-0"><strong><i class="bi bi-heart me-2"></i>Kidney/Liver:</strong><br><span style="color:#444444;" class="small">${med.kidneyWarning || ''} ${med.liverWarning || ''}</span></li>
                             </ul>
                         </div>
                         
